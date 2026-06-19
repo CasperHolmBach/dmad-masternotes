@@ -169,6 +169,29 @@ Visualisering af forskellige køretider:
   caption: [Visualisering af forskellige køretider.],
 )
 
+== Invarianter
+En invariant er et forhold som vedligeholdes af algoritmen i løbet af dens
+udførelse. Et eksempel på en invariant kan være i insertionsort, hvor alt til
+venstre for den nuværende key (sorte felt) skal være sorteret.
+
+#figure(
+  image("figures/insertioninvariant.png", width: 85%),
+  caption: [Invarianten i insertionsort: alt til venstre for den nuværende key er
+    altid sorteret.],
+)
+
+Ofte udgør invarianten selve kerneidéen af algoritmen, og kan også bruges som
+belæg for at algoritmen virker.
+
+En invariant skal overholdes efter hvert skridt (iteration af løkke) udført af
+algoritmen. Dette kan bevises ved hjælp af induktion:
+
+#figure(
+  image("figures/invariantinduction.png", width: 75%),
+  caption: [Induktionsprincippet: holder invarianten i basistilfældet, og bevarer
+    hvert skridt den, så gælder den gennem hele kørslen.],
+)
+
 == Analyse af løkker i hånden
 _Noter tilføjes (udledning af Θ-køretid for indlejrede løkker)._
 
