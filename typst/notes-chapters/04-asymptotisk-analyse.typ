@@ -1,6 +1,7 @@
 = Asymptotisk analyse
 // Del B — Algoritmer og Datastrukturer · slides: asymptoticAnalysis, algoritmeAnalyseIntro, invariantSlides
 
+
 == Hvad er en algoritme?
 En algoritme er en betegnelse for en trinvis opskrift for hvordan en computer
 kan løse en given opgave eller problem. Den tager imod et input, bearbejder det,
@@ -15,6 +16,7 @@ En korrekt algoritme kan derudover have forskellige kvaliteter:
 - Pladsforbrug (RAM / Memory)
 - Kompleksitet af implementation
 - Ekstra problemspecifikke egenskaber
+
 
 == Analyse af en algoritme
 Vi er ofte interesseret i at måle disse kvaliteter af en algoritme. For at kunne
@@ -32,11 +34,13 @@ analysere en algoritme skal man bruge følgende:
   - Induktion som bevisteknik.
   - Rekursionsligninger der beskriver køretid for rekursive algoritmer.
 
+
 == Best, average og worst case
 Vi kan generelt måle en algoritmes hastighed i enten best, average eller worst
 case. Dog giver det bedst mening at måle i *worst case*-køretid, da dette giver
 os en garanti for hvad vi kan forvente. En worst case er ofte en voksende
 funktion.
+
 
 == Definitioner
 Før vi begynder at fremstille en algoritme der kan løse vores problem, vil vi
@@ -144,6 +148,7 @@ $ f(n) > c dot g(n) $
 Fungerer altså ligesom store omega, men $f$ må ikke længere vokse samme
 hastighed som $g$.
 
+
 == Sammenligning af voksehastigheder
 For at sammenligne to algoritmers køretid skal vi sammenligne to funktioner, for
 at se hvordan hver algoritme vokser når inputtet $n$ stiger.
@@ -153,6 +158,37 @@ at se hvordan hver algoritme vokser når inputtet $n$ stiger.
   caption: [Som ses på grafen overstiger $g(n)$ altid $f(n)$ på et tidspunkt, og
     derfor har $g(n)$ altså en større voksehastighed end $f(n)$.],
 )
+
+
+== Asymptotisk forhold via grænseværdier
+Har man to funktioner, $f(n)$ og $g(n)$, kan man finde det asymptotiske forhold
+mellem dem ved at bruge følgende to sætninger, uden at kende $c$ og $N_0$:
+
+*Sætning 1:* Hvis $ f(n)/g(n) -> k > 0 quad ("en positiv konstant") quad "når" n -> oo $
+så gælder
+$ f(n) = Theta(g(n)) $
+Det vil sige, at hvis forholdet mellem $f$ og $g$ konvergerer mod et fast
+positivt tal, betyder det at de to funktioner vokser lige hurtigt.
+
+Eksempel:
+$ f(n) = 20n^2 + 17n + 312 $
+$ g(n) = n^2 $
+$ f(n)/g(n) = (20n^2 + 17n + 312)/n^2 = 20 + 17/n + 312/n^2 -->_(n -> oo) 20/1 = 20 $
+Eftersom 20 er en positiv konstant betyder det at: $f(n) = Theta(n^2)$.
+
+*Sætning 2:* Hvis $ f(n)/g(n) -> 0 quad "når" n -> oo $
+så gælder
+$ f(n) = o(g(n)) $
+Det vil sige, at hvis $f$ divideret med $g$ går mod nul, betyder det at $f$
+bliver relativt forsvindende lille i forhold til $g$, altså vokser $f$ strengt
+langsommere end $g$.
+
+Eksempel:
+$ f(n) = 20n^2 + 17n + 312 $
+$ g(n) = n^3 $
+$ f(n)/g(n) = (20n^2 + 17n + 312)/n^3 = 20/n + 17/n^2 + 312/n^3 -->_(n -> oo) 0/1 = 0 $
+Eftersom forholdet går mod 0 betyder det at: $f(n) = o(n^3)$.
+
 
 == Vækstratehierarki
 Voksehastigheder kan opstilles fra hurtigst til langsomst som følgende:
@@ -168,6 +204,7 @@ Visualisering af forskellige køretider:
   image("figures/timecomplexitygraph.png", width: 85%),
   caption: [Visualisering af forskellige køretider.],
 )
+
 
 == Invarianter
 En invariant er et forhold som vedligeholdes af algoritmen i løbet af dens
@@ -192,8 +229,26 @@ algoritmen. Dette kan bevises ved hjælp af induktion:
     hvert skridt den, så gælder den gennem hele kørslen.],
 )
 
+
 == Analyse af løkker i hånden
-_Noter tilføjes (udledning af Θ-køretid for indlejrede løkker)._
+Man kan som tommelfingerregel analysere en algoritmes køretid på hvor mange
+nestede loops de anvender:
+
+#figure(
+  image("figures/1loop.png", width: 60%),
+  caption: [Her har vi ét loop, så køretiden er $Theta(n)$.],
+)
+
+#figure(
+  image("figures/2loop.png", width: 60%),
+  caption: [Her har vi to nestede loops, så køretiden er $Theta(n^2)$.],
+)
+
+#figure(
+  image("figures/3loop.png", width: 60%),
+  caption: [Her har vi tre nestede loops, så køretiden er $Theta(n^3)$.],
+)
+
 
 == Eksamenstips og faldgruber
 _Noter tilføjes._
