@@ -39,7 +39,110 @@ os en garanti for hvad vi kan forvente. En worst case er ofte en voksende
 funktion.
 
 == Definitioner
-_Noter tilføjes (O, Ω, Θ, o, ω)._
+Før vi begynder at fremstille en algoritme der kan løse vores problem, vil vi
+gerne kende voksehastigheden af de forskellige algoritmer så vi kan vælge den
+hurtigste. Det gør vi i det her kursus med RAM-modellen, som er bevist at
+afspejle rigtig køretid ret godt.
+
+Når vi sammenligner forskellige voksehastigheder, er konstanter der bliver
+ganget på ligegyldige. Det vil altid være ledet der indebærer voksehastigheden
+(det led hvor $n$ befinder sig), som dominerer.
+
+#figure(
+  image("figures/multipliedconstants.png", width: 70%),
+  caption: [På grafen ser vi at funktionerne $h(n)$ og $k(n)$ altid vil overhale
+    $f(n)$ og $g(n)$, selvom deres konstant er betydelig mindre.],
+)
+
+For at simplificere analysen af algoritmer bruger vi asymptotisk notation. Ved
+asymptotisk notation betragter vi alle konstanter der bliver ganget på for ens
+($c$).
+
+#figure(
+  image("figures/asymptoticnotation.png", width: 70%),
+  caption: [Det vil sige alle algoritmer med samme voksehastighed bliver
+    betragtet som lige gode.],
+)
+
+Vi kan nu bruge følgende relationer til at sammenligne voksehastigheder, som
+hver især har en betegnelse:
+
+#table(
+  columns: 3,
+  align: (center, center, left),
+  table.header([Relation], [Betegnelse], [Udtales]),
+  $<=$, $O$, [O],
+  $>=$, $Omega$, [Omega],
+  $=$, $Theta$, [Theta],
+  $<$, $o$, [Lille o],
+  $>$, $omega$, [Lille omega],
+)
+
+=== O (øvre grænse)
+$ f(n) = O(g(n)) $
+Hvis der findes en $c > 0$ og grænse $N_0$, hvor der for alle $n$ efterfølgende
+($n >= N_0$), gælder:
+$ f(n) <= c dot g(n) $
+
+#figure(
+  image("figures/bigodefinition.png", width: 70%),
+  caption: [$g(n)$ sætter loftet for hvor hurtigt $f(n)$ må vokse.],
+)
+
+Det betyder altså at $g(n)$ sætter loftet for, hvor hurtigt $f(n)$ må vokse.
+$f(n)$ må gerne vokse samme hastighed, som $g(n)$. Der er ikke noget loft for
+hvor meget hurtigere $g(n)$ må vokse end $f(n)$.
+
+=== Ω (nedre grænse)
+$ f(n) = Omega(g(n)) $
+Hvis der findes en $c > 0$ og grænse $N_0$, hvor der for alle $n$ efterfølgende
+($n >= N_0$), gælder:
+$ f(n) >= c dot g(n) $
+
+#figure(
+  image("figures/bigomegadefinition.png", width: 70%),
+  caption: [$g(n)$ sætter gulvet for hvor hurtigt $f(n)$ skal vokse.],
+)
+
+Det betyder altså at $g(n)$ sætter gulvet for, hvor hurtigt $f(n)$ skal vokse.
+$f(n)$ må gerne vokse samme hastighed, som $g(n)$. Der er ikke noget loft for
+hvor meget hurtigere $f(n)$ må vokse end $g(n)$.
+
+=== Θ
+$ f(n) = Theta(g(n)) $
+Hvis der findes konstanter $c_1, c_2 > 0$ og en grænse $N_0$, hvor der for alle
+$n$ efterfølgende ($n >= N_0$), gælder:
+$ f(n) = O(g(n)) quad "og" quad f(n) = Omega(g(n)) $
+Som også kan beskrives:
+$ c_2 dot g(n) <= f(n) <= c_1 dot g(n) $
+
+#figure(
+  image("figures/thetadefinition.png", width: 70%),
+  caption: [$f$ skal altid ligge mellem de to funktioner med hver sin konstant.],
+)
+
+Det betyder at funktion $f$ skal altid ligge mellem de to funktion $g$, der har
+hver sin konstant, efter grænsen $N_0$.
+
+=== o (streng øvre grænse)
+$ f(n) = o(g(n)) $
+Hvis der for alle $c > 0$ findes en grænse $N_0$, så der for alle $n$
+efterfølgende ($n >= N_0$) gælder:
+$ f(n) <= c dot g(n) $
+Som også kan fortolkes som:
+$ f(n) < c dot g(n) $
+Fungerer altså ligesom store o, men $f$ må ikke længere vokse samme hastighed
+som $g$.
+
+=== ω (streng nedre grænse)
+$ f(n) = omega(g(n)) $
+Hvis der for alle $c > 0$ findes en grænse $N_0$, så der for alle $n$
+efterfølgende ($n >= N_0$) gælder:
+$ f(n) >= c dot g(n) $
+Som også kan fortolkes som:
+$ f(n) > c dot g(n) $
+Fungerer altså ligesom store omega, men $f$ må ikke længere vokse samme
+hastighed som $g$.
 
 == Sammenligning af voksehastigheder
 For at sammenligne to algoritmers køretid skal vi sammenligne to funktioner, for
