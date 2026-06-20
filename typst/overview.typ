@@ -117,7 +117,7 @@ are representative of the format.
   Small, self-contained, and almost pure pattern-matching once definitions are
   memorised (logic equivalences, quantifier order, relation properties,
   induction shape). Don't let the 20% weighting fool you — per hour studied this
-  is as valuable as Tier 1. Make a one-page definitions sheet (allowed aid).
+  is as valuable as Tier 1. Make a condensed definitions sheet (allowed aid).
 
 + *Graph traversal: BFS, DFS, topological sort* — _≈17 pts._ \
   Highly mechanical if you follow CLRS conventions (alphabetical adjacency
@@ -166,7 +166,7 @@ are representative of the format.
   stroke: 0.5pt + luma(200),
   inset: 7pt,
   [Day 1], [*Asymptotics & recurrences* (Tier 1.1). Memorise Master Theorem cases; drill O/Ω/Θ comparisons and loop-runtime questions from past exams.],
-  [Day 2], [*Discrete Maths* (Tier 1.2) — all three chapters. Build your allowed-aid one-pager: logic equivalences, quantifier negation, relation properties, induction template.],
+  [Day 2], [*Discrete Maths* (Tier 1.2) — all three chapters. Build your allowed-aid notes sheet: logic equivalences, quantifier negation, relation properties, induction template.],
   [Day 3], [*Graph traversal* (Tier 1.3): BFS, DFS times + edge types, topological sort. Trace several graphs by hand.],
   [Day 4], [*Sorting* + *MST/Disjoint sets* (Tier 2). Hand-trace `PARTITION`, radix/counting sort, Kruskal, Union-Find.],
   [Day 5], [*Greedy/Huffman* + *Red-black trees* (Tier 2). Then *Heaps* (Tier 3).],
