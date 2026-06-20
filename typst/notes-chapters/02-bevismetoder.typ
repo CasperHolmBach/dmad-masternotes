@@ -126,6 +126,38 @@ Eksempel:
     hvor der ganges med $2$ på begge sider af uligheden.],
 )
 
+Det er ikke nødvendigt at opbygge induktionsskridtet som et direkte bevis, hvor
+hele kæden skal vises. Man kan i stedet tage udgangspunkt i venstresiden af den
+ulighed der skal udledes, og så bruge induktionsantagelsen undervejs.
+
+For at udlede $2^n < n!$ kan vi med fordel opsætte induktionsantagelsen:
+
+$ 2^k < k! $
+
+Vi vil bevise induktionsskridtet:
+
+$ 2^(k+1) < (k+1)! $
+
+Først omskrives der med en potensregneregel:
+
+$ 2^(k+1) = 2 dot 2^k $
+
+Brug induktionsantagelsen til at udskifte $2^k$:
+
+$ 2 dot 2^k < 2 dot k! $
+
+Eftersom $2 < k+1$ kan $2$ nu udskiftes:
+
+$ 2 dot k! < (k+1) dot k! $
+
+Benyt faktorial-reglen til at samle udtrykket:
+
+$ (k+1) dot k! = (k+1)! $
+
+Dermed:
+
+$ 2^(k+1) < (k+1)! $
+
 
 == Eksamenstips og faldgruber
 _Noter tilføjes._
