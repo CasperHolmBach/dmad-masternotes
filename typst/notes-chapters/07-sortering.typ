@@ -219,7 +219,94 @@ De tre $O(n log n)$ sorteringsalgoritmer:
 
 
 == Lineærtids-sorteringer
-_Noter tilføjes (counting sort, radix sort, bucket sort)._
+Sammenligningsbaserede sorteringsalgoritmer har alle sammen de følgende egenskaber:
+- *Basal handling:* sammenlign to elementer i input og foretag derudfra et valg mellem to måder at fortsætte på
+- *Svar:* den opstilling som skal laves for at få sorteret orden
+- *Id for elementer:* deres oprindelige position (index) i input.
+
+På baggrund af disse egenskaber kan vi opstille et decision tree som er generelt
+for alle sammenligningsbaserede sorteringsalgoritmer:
+
+#figure(
+  image("figures/allcomparingsortingalgorithms.png", width: 70%),
+  caption: [Decision tree for en sammenligningsbaseret sortering af tre elementer.],
+)
+
+For at nå til svaret: det komplet sorteret output, bliver vi altså altid nødt til
+at bevæge os mindst $log(n!)$ lag ned i dette decision tree, hvilket asymptotisk
+er $Omega(n log n)$.
+
+For at kunne sortere hurtigere end $Omega(n log n)$ bliver vi altså nødt til at
+bevæge os væk fra sammenligningsalgoritmer.
+
+=== Counting sort
+Bruger alle elementer fra input som array-indekser. Det kræver dog at input kun
+er fyldt med heltal, af størrelse op til $k$ (den højeste værdi blandt input).
+Counting sort benytter tre array's $A$, $B$ og $C$.
+- $A$ – input array med længde $n$
+- $C$ – et "tæller-array" med længde $k+1$, ét felt for hver mulig værdi $(0, 1, ..., k)$
+- $B$ – output arrayet, hvor det sorterede resultat ender, med længde $n$
+
+Først går algoritmen $A$ igennem, og tæller op i $C$ for hvert element på den
+plads der svarer til elementets værdi. F.eks. hvis $A$ indeholder 3 to gange vil
+$C[3] = 2$.
+
+#figure(
+  image("figures/countingsorta.png", width: 50%),
+  caption: [Input-arrayet $A$.],
+)
+
+Nu står vi med $C$, som kan se således ud:
+
+#figure(
+  image("figures/countingsortc.png", width: 40%),
+  caption: [$C$ efter optælling: antallet af hver værdi.],
+)
+
+Nu ved vi hvor mange elementer der er af hver værdi, men vi ved endnu ikke
+hvilken position i $B$ hvert element skal have. Næste fase handler om at omdanne
+$C$ så hver celle i stedet fortæller "hvor mange elementer i alt er $<=$ denne
+værdi." Det gøres med:
+$ C[i] = C[i] + C[i-1] $
+Nu kommer $C$ til at se sådan ud:
+
+#figure(
+  image("figures/countingsortc2.png", width: 40%),
+  caption: [$C$ efter præfikssummering: antal elementer $<=$ hver værdi.],
+)
+
+I sidste fase gennemgår vi $A$ baglæns, og for hvert element bruger vi $C$ til at
+finde dens korrekte plads i det sorterede array $B$.
+
+Vi starter altså med at kigge på indeks $A[8]$, som indeholder værdien 3. Så
+kigger vi i array $C$, hvor 3 skal placeres: $C[3] = 7$, altså værdien 3 skal
+placeres på array $B$'s 7. indeks. Efter at have placeret 3 skal værdien gemt i
+$C[3]$ nu dekrementeres med 1, så den er klar i tilfældet af at vi opdager endnu
+en 3'er i $A$. Nu fortsættes hele denne proces og vi tager nu $A[7]$, osv osv…
+
+#figure(
+  image("figures/countingsortvisual.png", width: 90%),
+  caption: [Counting sort trin for trin: placering af elementer i $B$ via $C$.],
+)
+
+Counting sort har køretiden $O(n + k)$.
+
+=== Radix sort
+Endnu en ikke-sammenligningsbaseret sorteringsalgoritme, der også kan sortere i
+lineær tid. Radix sort sorterer tal cifferposition for cifferposition, startende
+fra det mindst betydende ciffer (længst til højre) og bevæger os mod det mest
+betydende (længst til venstre).
+
+Vi starter altså med kun at sortere enerne. Derefter sorterer vi kun tiere. Til
+sidst sorterer vi kun hundrede.
+
+#figure(
+  image("figures/radixsortvisual.png", width: 80%),
+  caption: [Radix sort: stabil sortering på ét ciffer ad gangen, fra højre mod venstre.],
+)
+
+Radix sort har en køretid på $O(d (n + k))$, hvis der bruges counting sort i
+for-løkken.
 
 
 == Sammenligningstabel
