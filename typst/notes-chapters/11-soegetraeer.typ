@@ -172,7 +172,43 @@ skubbe den ét niveau op mod roden.
 
 
 == Udvidede (augmented) træer
-_Noter tilføjes._
+Binære søgetræer med ekstra information i knuderne. Et eksempel kunne være, at alle
+knuder gemmer størrelsen af deres undertræ (antal af knuder i undertræ inklusiv sig
+selv):
+
+#figure(
+  image("figures/augmentedbst.png", width: 90%),
+  caption: [Et rød-sort træ hvor hver knude gemmer sin nøgle (key) og sin undertræ-størrelse (size).],
+)
+
+Ekstra information kan give os mulighed for at tilføje ny funktionalitet til et
+binært søgetræ. F.eks. ved at gemme størrelse kan vi udføre følgende to nye
+operationer i $O(log n)$ tid:
+- *OS-Rank:* Find rang af en given nøgle. Altså nøglens "plads-nummer", hvis alle nøgler stod i sorteret rækkefølge.
+- *OS-Select:* Find nøgle der har en given rang.
+
+#figure(
+  image("figures/augmentedbstrank.png", width: 90%),
+  caption: [Rang = nøglens nummer i sorteret orden.],
+)
+
+Pseudokoden ser sådan ud:
+
+#figure(
+  image("figures/augmentedbstfunctionspseudo.png", width: 85%),
+  caption: [`OS-RANK` og `OS-SELECT`.],
+)
+
+Man skal huske at vedligeholde den ekstra information, når der forekommer
+indsættelser, sletninger eller rotationer. Det er heldigvis nemt når man tager
+følgende i betragtning:
+- Hvis en knudes to børns værdier $k_1$ og $k_2$ er korrekt, kan knudens egen værdi $k$ beregnes i $O(1)$ tid. Et blads værdi kan beregnes i $O(1)$ tid.
+
+For eksemplet der bruger undertræs-størrelse som ekstra information kan en given knude
+opdateres ved $k = 1 + k_1 + k_2$.
+
+Dette princip gælder for alle slags ekstra informationer, og ikke blot størrelse af
+undertræer.
 
 
 == Eksamenstips og faldgruber
