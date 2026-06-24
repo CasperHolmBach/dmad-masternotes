@@ -432,3 +432,33 @@ at $b$ står før $d$, men her står $d$ (pos 1) før $b$ (pos 2).
 Hvis der på et tidspunkt ikke findes nogen knude med 0 indgående kanter, men der
 stadig er knuder tilbage, indeholder grafen en cyklus, og der findes IKKE en
 topologisk sortering.
+
+=== SCC'er: disjunkthed og maksimalitet
+*Grundregel.* Hver knude kan KUN tilhøre ÉN strongly connected component (SCC).
+SCC'er er disjunkte og skal være MAKSIMALE.
+
+*Konsekvens.* Hvis en knude $g$ allerede er en del af én gensidigt forbundet
+gruppe (f.eks. ${f, g, h}$), kan $g$ IKKE samtidig være en del af en anden separat
+SCC (f.eks. ${a, g, i}$) — selv hvis $a, g, i$ i sig selv opfylder kravet om
+gensidig forbindelse (en cyklus $a -> g -> i -> a$).
+
+*Hvad gør man når to grupper deler en knude?* Hvis to grupper begge er gensidigt
+forbundne OG deler en fælles knude, skal man tjekke om resten af knuderne i de to
+grupper også kan nå hinanden gensidigt (via den fælles knude). Hvis JA → grupperne
+SMELTER SAMMEN til én større, fælles SCC.
+
+*Eksempel.* ${f, g, h}$ er gensidigt forbundne, og ${a, g, i}$ er gensidigt
+forbundne (via cyklus $a -> g -> i -> a$). Da $g$ er fælles, tjek om f.eks. $a$
+kan nå $h$ og omvendt:
+- $a -> h$? Ja, via $a -> g -> h$.
+- $h -> a$? Ja, via $h -> g -> i -> a$.
+
+Begge veje findes → $a$ og $h$ kan nå hinanden → hele gruppen ${a, f, g, h, i}$
+hører til SAMME, større SCC.
+
+*Praktisk tjekliste:*
++ Find en lille gensidigt forbundet gruppe (f.eks. via en synlig cyklus eller dobbeltpil).
++ Tjek om nogen af gruppens knuder også kan nå / nås fra knuder UDENFOR gruppen.
++ Hvis ja for begge retninger (kan nå OG kan nås fra) → udvid gruppen; den oprindelige gruppe var ikke maksimal.
++ Gentag indtil ingen yderligere knuder kan tilføjes — så har du den fulde, maksimale SCC.
++ En knude der allerede er placeret i en SCC kan ikke "låne ud" til en anden, mindre SCC — alle overlappende kandidatgrupper skal smelte sammen i stedet.

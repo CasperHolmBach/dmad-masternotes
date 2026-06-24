@@ -183,7 +183,44 @@ Dette giver samme køretid på $O(n^2)$ og pladsforbrug $O(n)$. Dog måske en li
 
 
 == Køretids- og pladsanalyse
-_Noter tilføjes (aflæse kompleksitet ud fra en rekursionsligning; reducere pladsforbrug)._
+
+=== Køretid ud fra en rekursionsformel (mønster)
+*Kerneindsigt.* Når man skal finde køretiden for en DP-algoritme defineret ved en
+rekursionsformel, skal man se på to uafhængige ting og multiplicere dem:
+
+```
+Samlet køretid = (antal delproblemer / celler i DP-tabellen)
+               × (tid det tager at udregne ÉN celle ud fra rekursionen)
+```
+
+*1. Antal delproblemer (tabelstørrelse).* Kig på hvilke parametre delproblemet
+$W(i, j, dots)$ er indekseret af, og hvilke intervaller de løber over. Hvis
+$W(i, j)$ er defineret for $0 <= i <= m$ og $0 <= j <= n$, er der $Theta(m n)$
+celler i tabellen — uanset hvad selve formlen siger.
+
+*2. Tid pr. celle.* Det er her man tjekker selve rekursionsformlen. Spørgsmålet
+er: refererer formlen kun til et konstant antal andre, allerede beregnede celler —
+eller skal man iterere over et helt interval (en hel række, søjle, eller en
+sum/min/max over flere $k$-værdier) for at finde værdien?
+- Hvis formlen kun kigger på fx $W(i-1, j)$ og $W(i, j-1)$ (to faste naboer) → $Theta(1)$ pr. celle.
+- Hvis formlen indeholder noget i stil med "$max$ over $k$ fra 1 til $i$ af $dots$" → $Theta(i)$ eller $Theta(n)$ pr. celle (afhængigt af hvad man itererer over).
+
+*Faldgrube:* Det er let fejlagtigt at tro, at flere $max$/$min$-led i formlen
+automatisk betyder en løkke. Tjek om hvert led er ét fast opslag (konstant tid)
+eller en optimering over en hel mængde af muligheder (lineær/kvadratisk tid).
+
+*Eksempel.*
+$ W(i, j) = max{0, w(i, j)} + max{W(i-1, j), W(i, j-1)} $
+- Tabelstørrelse: $(m+1) times (n+1)$ → $Theta(m n)$.
+- Pr. celle: kun opslag af $w(i, j)$, $W(i-1, j)$, $W(i, j-1)$ — alle konstant tid → $Theta(1)$.
+- Samlet: $Theta(m n) dot Theta(1) = Theta(m n)$.
+
+*Tjekliste til lignende opgaver:*
+- Identificer alle indeks-parametre og deres intervaller → giv tabelstørrelsen.
+- Læs rekursionsformlen led for led: er hvert led et fast opslag, eller en optimering/sum over et interval?
+- Hvis et led involverer "for alle $k$ mellem $dots$ og $dots$", er det IKKE konstant tid.
+- Multiplicer tabelstørrelse med tid pr. celle — det giver den endelige køretid.
+- Tjek dine svarmuligheder: er der en mulighed der svarer til "tabelstørrelse" alene (ofte forkert, hvis cellerne ikke er $O(1)$), og en der svarer til "tabelstørrelse $times$ ekstra faktor" (ofte rigtig, hvis der er en indre løkke)?
 
 
 == Eksamenstips og faldgruber

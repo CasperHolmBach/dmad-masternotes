@@ -212,4 +212,109 @@ undertræer.
 
 
 == Eksamenstips og faldgruber
-_Noter tilføjes._
+
+=== Rød-sort træ: indsættelse og fixup
+*Trin 1 — almindelig BST-indsættelse.* Indsæt nøglen som man ville i et
+almindeligt binært søgetræ (ignorer farver et øjeblik). Den nye knude z farves
+altid RØD ved indsættelse, og dens to børn er NIL (sorte, blade).
+
+*Trin 2 — tjek for rød-rød konflikt.* Hvis den nye knudes forælder ALLEREDE er
+rød, har vi en rød-rød konflikt (to røde knuder i forælder-barn-relation), som
+bryder rød-sort-reglerne. Dette kræver en "fixup". Hvis forælderen er SORT, er der
+ingen konflikt — indsættelsen er færdig, ingen yderligere ændring nødvendig.
+
+*Fixup-casene (når z og z.parent begge er røde).* Lad z = den nye/aktuelle knude,
+og lad "bedsteforælder" = z.parent.parent. Find "onkel" = bedsteforælderens andet
+barn (modsat side af z.parent).
+
+*Case 1 — onkel er RØD:*
+- Farv forælder og onkel SORT.
+- Farv bedsteforælder RØD.
+- Sæt z = bedsteforælder, og fortsæt fixup opad fra der (loop igen).
+
+*Case 2 + 3 — onkel er SORT (eller NIL):* Her skal vi se på om z og z.parent
+ligger på "samme side" eller "modsatte sider" af bedsteforælderen:
+- *Samme side* (f.eks. z er venstre barn, z.parent er også venstre barn af bedsteforælder — "left-left", eller "right-right"):
+  - Farv z.parent SORT, bedsteforælder RØD.
+  - Rotér bedsteforælder (rotation modsat den side z.parent ligger på: left-left → højre-rotation om bedsteforælder).
+- *Modsatte sider* (f.eks. z er venstre barn, men z.parent er HØJRE barn af bedsteforælder — "right-left", eller omvendt "left-right"):
+  - Først: rotér z.parent (i den retning der "retter ud" knækket, f.eks. højre-rotation hvis det er right-left-tilfældet).
+  - Sæt z = den gamle z.parent (nu flyttet til at være barn).
+  - Derefter udfør samme handling som "samme side"-tilfældet: farv z.parent sort, bedsteforælder rød, og rotér bedsteforælder.
+
+*VIGTIGT — rod-farven.* Til sidst sættes roden af træet altid til SORT (uanset
+hvad fixup-loopet ellers har gjort) — dette er en garanti i algoritmen, ikke noget
+man skal udlede.
+
+*Eksempel (fra opgaven).* Indsæt 21 i træet, hvor 21 BST-indsættes som venstre
+barn af 23 (rød).
+- z = 21 (rød), z.parent = 23 (rød) → rød-rød konflikt.
+- z.parent.parent = 20. Er 23 venstre eller højre barn af 20? HØJRE.
+- Er 21 (z) venstre eller højre barn af 23? VENSTRE.
+- Det er "right-left"-tilfældet (modsatte sider).
+- Onkel (20's andet barn, dvs. 20's VENSTRE barn) er NIL (sort) → bekræfter at vi er i case 2/3, ikke case 1.
+
+Udførelse:
++ Højre-rotation om 23 (retter knækket ud): 21 flytter op, 23 bliver 21's højre barn. Sæt z = 23 (den gamle forælder, nu nede).
+  - Vent — i den korrekte CLRS-fixup sættes z til den GAMLE z.parent FØR rotationen af knækket, og derefter farves det NYE z.parent (efter første rotation) sort, og bedsteforælderen rød, hvorefter man roterer om bedsteforælderen. Se kildekoden/simuleringen for det præcise resultat — håndregning af rotationer er fejlbarlig.
++ Efter begge rotationer og farveskift ender resultatet med:
+  - 21 bliver SORT, og indtager 23's gamle plads (som barn af 18).
+  - 20 og 23 bliver begge RØDE, som 21's to børn.
+
+*Praktisk råd.* Rotationer i rød-sort træer er nemme at fejlregne i hovedet —
+især "modsatte sider"-tilfældet, som kræver TO rotationer. Ved opgaver med flere
+svarmuligheder: simulér så grundigt som muligt trin for trin, og brug evt. kode
+til at verificere resultatet, hvis du har mulighed for det og er i tvivl.
+
+*Generel tommelfingerregel* til at genkende resultatet uden fuld simulering: Når
+en "modsatte sider"-konflikt opstår tæt på bunden af træet, ender den MIDTERSTE af
+de tre involverede nøgler (her: 21, imellem 20 og 23) typisk med at blive den nye
+SORTE knude på toppen af det lille subtræ, med de to oprindelige knuder (20 og 23)
+som dens RØDE børn. Dette er en nyttig hurtig genkendelsesregel, men bør bekræftes
+ved fuld simulering hvis muligt.
+
+=== Aggregerede værdier i rød-sorte træer (mønster, fx `ssg`)
+*Kerneindsigt.* Når en knude `v` i et rød-sort træ (eller BST generelt) gemmer en
+aggregeret værdi over hele sit undertræ — fx `ssg` (sum of square gaps) — kan
+værdien for `v` ofte udregnes ud fra børnenes værdier plus et "overgangsbidrag"
+der dækker de elementer, som først bliver nabopar, når man sætter venstre og højre
+undertræ sammen via `v`.
+
+*Hvorfor.* Inorder-gennemløb af undertræet rodet i `v` giver rækkefølgen:
+
+```
+[... v.l's nøgler ..., v.l.max, v.x, v.r.min, ... v.r's nøgler ...]
+```
+
+Alle "interne" nabopar findes allerede inde i venstre og højre undertræ — det er
+dækket af `v.l.ssg` og `v.r.ssg`. Men der opstår to nye nabopar, som ikke fandtes
+i børnenes egne lister:
++ `(v.l.max, v.x)` — overgangen fra venstre undertræ til `v`.
++ `(v.x, v.r.min)` — overgangen fra `v` til højre undertræ.
+
+*Formel:*
+
+```
+v.ssg = v.l.ssg + (v.x - v.l.max)² + (v.x - v.r.min)² + v.r.ssg
+```
+
+*Generaliseret princip (kan genbruges).* For en aggregeret egenskab over en
+sorteret sekvens, der er sammensat af under-sekvenser (fx via et BST), gælder
+typisk:
+
+```
+aggregat(helhed) = aggregat(venstre del)
+                 + bidrag(grænseelement venstre, midterelement)
+                 + bidrag(midterelement, grænseelement højre)
+                 + aggregat(højre del)
+```
+
+hvor "grænseelementerne" er `min` / `max` af de respektive undertræer — ikke
+`v.l.x` / `v.r.x`, da rodens egen nøgle i et undertræ ikke nødvendigvis er den
+nærmeste nabo i sorteret rækkefølge.
+
+*Tjekliste til lignende opgaver:*
+- Identificer hvilken sorteret sekvens undertræet repræsenterer (inorder).
+- Find ud af hvor "samlingen" af venstre + midte + højre skaber nye nabopar.
+- Brug `min` / `max` af undertræer til at finde de korrekte grænseværdier — ikke rod-nøglen.
+- Tjek at antallet af nye bidrag matcher antallet af nye nabopar (her: 2 — ét for hver overgang).

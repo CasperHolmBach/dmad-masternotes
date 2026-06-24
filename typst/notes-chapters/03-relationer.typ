@@ -187,4 +187,45 @@ lukninger:
 
 
 == Eksamenstips og faldgruber
-_Noter tilføjes._
+
+=== Transitiv lukning: husk de originale par
+*Definition.* Den transitive lukning af en relation $R$ er den MINDSTE transitive
+relation der INDEHOLDER $R$. Det betyder at svaret altid er hele den udvidede
+mængde — de ORIGINALE par PLUS de NYE par der skal tilføjes for at gøre relationen
+transitiv. Det er IKKE kun de nye/manglende par.
+
+*VIGTIG FALDGRUBE.* Når en opgave spørger "angiv den transitive lukning af
+relationen $R$", skal svaret indeholde:
+$ ("originale par i " R) union ("nye par der kræves for transitivitet") $
+Det er en hyppig fejl kun at angive de NYE par man har udledt, og glemme at de
+oprindelige par fra $R$ stadig skal være med i svaret.
+
+Samme princip gælder for andre typer "lukning":
+- *Refleksiv lukning:* original relation + alle par $(x, x)$ der mangler.
+- *Symmetrisk lukning:* original relation + alle par $(y, x)$ hvor $(x, y)$ er der.
+- *Transitiv lukning:* original relation + alle par der følger af transitivitet.
+
+*Metoden til at finde nye par (transitivitet).* Transitivitet betyder: hvis
+$(x, y)$ og $(y, z)$ begge er i relationen, skal $(x, z)$ også være med. Gå
+systematisk igennem: for hvert par $(x, y)$ i relationen, tjek om der findes et
+par $(y, z)$ (samme "mellem-element" $y$) — hvis ja, tilføj $(x, z)$. Gentag
+processen også med NYE par der er tilføjet undervejs, indtil ingen flere nye par
+kan udledes (fixpunkt).
+
+*Eksempel.* Original relation: ${(a, b), (a, c), (b, b), (c, d), (d, e)}$.
+
+Udled nye par:
+- $(a, c)$ og $(c, d)$ → tilføj $(a, d)$.
+- $(a, d)$ (nyt) og $(d, e)$ → tilføj $(a, e)$.
+- $(c, d)$ og $(d, e)$ → tilføj $(c, e)$.
+- $(b, b)$ og $(b, b)$ → giver intet nyt (allerede der).
+
+Ingen flere nye par kan udledes. SVARET (fuld transitiv lukning, original + nye):
+$ {(a, b), (a, c), (a, d), (a, e), (b, b), (c, d), (c, e), (d, e)} $
+IKKE blot ${(a, d), (a, e), (c, e)}$ — det er kun tilføjelserne, ikke hele svaret.
+
+*Tjekliste:*
++ List den originale relation.
++ Find alle nye par via transitivitets-reglen, gentag til fixpunkt.
++ SVARET $=$ original relation $union$ alle nye par (husk foreningsmængden!).
++ Dobbelttjek at originale par stadig er med i det endelige svar.

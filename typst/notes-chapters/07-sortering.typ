@@ -40,6 +40,11 @@ Insertionsort har en køretid på $O(n^2)$:
   caption: [Pseudokode for insertionsort.],
 )
 
+*Bedste og værste tilfælde:* Insertionsort er adaptiv — køretiden afhænger af
+inputtets orden.
+- *Bedste tilfælde* ($O(n)$): inputtet er allerede sorteret (stigende). Hvert nyt element sammenlignes kun én gang med sin venstre nabo og flyttes ikke.
+- *Værste tilfælde* ($O(n^2)$): inputtet er omvendt sorteret (faldende). Hvert nyt element skal forskydes hele vejen forrest i den sorterede del.
+
 
 === Selectionsort
 Ved selectionsort holder man input i en liste for sig selv, og så flytter man i
@@ -51,6 +56,11 @@ Selectionsort har en køretid på $O(n^2)$.
   image("figures/selectionsortpseudo.png", width: 70%),
   caption: [Pseudokode for selectionsort.],
 )
+
+*Bedste og værste tilfælde:* $O(n^2)$ i ALLE tilfælde, uafhængigt af inputtets
+orden. Algoritmen skanner altid hele den usorterede rest igennem for at finde det
+mindste element — også selvom inputtet allerede er sorteret. Der er derfor ingen
+gevinst ved et "pænt" input.
 
 
 === Mergesort
@@ -69,6 +79,10 @@ Mergesort har en køretid på $O(n log n)$. Det skyldes at det ikke koster noget
 arbejde at splitte listen ud (trivielt arbejde). Eftersom vi halverer $n$ i hver
 iteration får vi en rekursionsdybde på $log(n)$. Når vi fletter elementer,
 kigger vi kun listen igennem én gang, og derfor laver vi kun $n$ arbejde per lag.
+
+*Bedste og værste tilfælde:* $O(n log n)$ i alle tilfælde. Opdelingen og
+fletningen udføres ens uanset inputtets orden, så bedste og værste tilfælde er
+asymptotisk det samme.
 
 
 === Quicksort
@@ -210,6 +224,10 @@ Det kan også ses visuelt:
 
 Heapsort har en køretid på $O(n log n)$.
 
+*Bedste og værste tilfælde:* $O(n log n)$ i alle tilfælde. Build-Heap koster
+$O(n)$, og derefter udtages $n$ elementer, hver med et Max-Heapify-kald på
+$O(log n)$. Køretiden afhænger ikke af inputtets orden.
+
 De tre $O(n log n)$ sorteringsalgoritmer:
 
 #figure(
@@ -291,6 +309,11 @@ en 3'er i $A$. Nu fortsættes hele denne proces og vi tager nu $A[7]$, osv osv�
 
 Counting sort har køretiden $O(n + k)$.
 
+*Bedste og værste tilfælde:* $O(n + k)$ i alle tilfælde, uafhængigt af
+elementernes rækkefølge. Det afgørende er forholdet mellem nøgleintervallet $k$ og
+$n$: effektiv når $k = O(n)$, men både langsom og pladskrævende når $k >> n$,
+fordi tæller-arrayet $C$ har længde $k + 1$.
+
 === Radix sort
 Endnu en ikke-sammenligningsbaseret sorteringsalgoritme, der også kan sortere i
 lineær tid. Radix sort sorterer tal cifferposition for cifferposition, startende
@@ -308,9 +331,33 @@ sidst sorterer vi kun hundrede.
 Radix sort har en køretid på $O(d (n + k))$, hvis der bruges counting sort i
 for-løkken.
 
+*Bedste og værste tilfælde:* $O(d(n + k))$ i alle tilfælde, uafhængigt af
+elementernes rækkefølge. Afhænger af antal cifre $d$ og cifferintervallet $k$
+(typisk $k = 10$), ikke af rækkefølgen: dyrere jo flere cifre $d$ tallene har.
+
 
 == Sammenligningstabel
-_Noter tilføjes (bedste/gennemsnitlige/værste tilfælde, in-place, stabil)._
+
+#table(
+  columns: 6,
+  align: (left, center, center, center, center, center),
+  table.header([Algoritme], [Bedste], [Gennemsnit], [Værste], [Stabil], [In-place]),
+  [Insertionsort], $O(n)$, $O(n^2)$, $O(n^2)$, [Ja], [Ja],
+  [Selectionsort], $O(n^2)$, $O(n^2)$, $O(n^2)$, [Nej], [Ja],
+  [Mergesort], $O(n log n)$, $O(n log n)$, $O(n log n)$, [Ja], [Nej],
+  [Quicksort], $O(n log n)$, $O(n log n)$, $O(n^2)$, [Nej], [Ja],
+  [Heapsort], $O(n log n)$, $O(n log n)$, $O(n log n)$, [Nej], [Ja],
+  [Counting sort], $O(n + k)$, $O(n + k)$, $O(n + k)$, [Ja], [Nej],
+  [Radix sort], $O(d(n + k))$, $O(d(n + k))$, $O(d(n + k))$, [Ja], [Nej],
+)
+
+*Vigtig pointe:* Kun *insertionsort* og *quicksort* er følsomme over for inputtets
+orden — dvs. har et bedste tilfælde der adskiller sig fra det værste afhængigt af
+arrangementet. Insertionsort er hurtigst ($O(n)$) på allerede sorteret input og
+langsomst ($O(n^2)$) på omvendt sorteret. Quicksort rammer sit værste tilfælde
+($O(n^2)$) når pivotvalget giver maksimalt skæve opdelinger (med sidste-element-
+pivot sker det netop på sorteret/næsten sorteret input). De øvrige fem algoritmer
+har samme asymptotiske køretid uanset inputtets orden.
 
 
 == Eksamenstips og faldgruber
