@@ -69,3 +69,4 @@
 #include "notes-chapters/13-dynamisk-programmering.typ"
 #include "notes-chapters/14-hashing.typ"
 #include "notes-chapters/15-korteste-veje.typ"
+#include "notes-chapters/16-kompleksitetsoversigt.typ"
