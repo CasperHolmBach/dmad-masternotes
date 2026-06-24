@@ -308,3 +308,53 @@ to udtryk:
 + Placer begge funktioner på vækstrate-skalaen ovenfor.
 + Tjek om uligheden skal være streng ($o$, $omega$) eller kan være lige ($O$, $Omega$, $Theta$).
 + Pas på "snyde"-udtryk: $(log n)^k$, konstanter sat i forhold til konstanter, og udtryk der ligner hinanden visuelt men er meget forskellige (f.eks. $(log n)^3$ vs $log(n^3)$ vs $n^3$).
+
+=== Pas på: "i = i + i" er fordobling, ikke lineær vækst
+*Fælde:* `i = i + i` ser ud som addition (ligesom `i = i + 5`), men fordi
+højresiden også indeholder `i`, er det reelt
+$ i = i + i = 2 dot i $
+Det er multiplikation, ikke addition. Det ændrer hele væksthastigheden for
+variablen, og dermed antallet af loop-iterationer.
+
+*Eksempel.*
+
+```
+i = 1
+while i ≤ n
+    i = i + i
+```
+
+#table(
+  columns: 2,
+  align: (center, center),
+  table.header([Iteration], [$i$]),
+  [start], $1$,
+  $1$, $2$,
+  $2$, $4$,
+  $3$, $8$,
+  $k$, $2^k$,
+)
+
+Loopet stopper når $2^k > n$, altså når $k approx log_2(n)$. → Antal iterationer
+$= Theta(log n)$.
+
+*Tjekliste — hvad styrer antal iterationer?*
+
+#table(
+  columns: 3,
+  align: (left, left, center),
+  table.header([Opdatering], [Vækst], [Antal iterationer]),
+  [$i = i + 1$], [lineær], $Theta(n)$,
+  [$i = i + c$ (konstant)], [lineær], $Theta(n)$,
+  [$i = i + i$ ($= 2i$)], [eksponentiel], $Theta(log n)$,
+  [$i = i dot c$], [eksponentiel], $Theta(log n)$,
+  [$i = i dot i$], [dobbelt-eksp.], $Theta(log log n)$,
+)
+
+*Tommelfingerregel:* Kig altid på om opdateringen er:
+- *Additiv* (lægger en KONSTANT til) → lineært antal iterationer, $Theta(n)$.
+- *Multiplikativ* (ganger med noget, eller "$i + i$", "$i dot i$") → logaritmisk eller endnu færre iterationer.
+
+Det er let at blive snydt af $i = i + i$, fordi det visuelt ligner en simpel
+addition som i andre opgaver — men da $i$ optræder på begge sider af
+lighedstegnet i en sum med sig selv, er det matematisk en fordobling.

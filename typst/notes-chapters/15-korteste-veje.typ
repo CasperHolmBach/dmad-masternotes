@@ -136,4 +136,55 @@ _Noter tilføjes (valg ud fra negative kanter / cykler / DAG)._
 
 
 == Eksamenstips og faldgruber
-_Noter tilføjes._
+
+=== RELAX og Dijkstra — forklaret simpelt
+*Hvad er RELAX overhovedet?* Tænk på $v.d$ som "det bedste jeg indtil nu ved om,
+hvor langt der er fra start-knuden $a$ til $v$". I starten ved vi ingenting, så
+alle andre knuder end $a$ har $v.d = infinity$ (uendelig langt væk, fordi vi ikke
+har fundet en vej endnu).
+
+RELAX på en kant $(u, v)$ stiller ét eneste simpelt spørgsmål: "Hvis jeg går til
+$u$, og derfra videre til $v$ — er DEN vej kortere end den bedste vej til $v$, jeg
+kendte i forvejen?" Konkret udregner $"RELAX"(u, v)$ værdien $u.d + w(u, v)$ og
+sammenligner med $v.d$.
+- *Hvis den nye vej er kortere* → vi opdaterer $v.d$ til den nye, mindre værdi. Det er det, opgaverne kalder "$v.d$ ændrer sig".
+- *Hvis den nye vej ikke er bedre* (lige god eller værre) → vi gør ingenting; $v.d$ ændrer sig ikke.
+
+*Eksempel.* Sig at $u.d = 5$ og kanten $(u, v)$ har vægt $3$. Den nye foreslåede
+vej til $v$ er $5 + 3 = 8$.
+- Hvis $v.d$ i forvejen var $infinity$ → $8 < infinity$, så vi opdaterer $v.d = 8$. #sym.checkmark Ændring.
+- Hvis $v.d$ i forvejen allerede var $6$ → $8$ er ikke mindre end $6$, så vi gør ingenting. Ingen ændring.
+
+Det er hele idéen — intet mere mystisk end det.
+
+*Hvad gør Dijkstra så?* Dijkstra er bare en metode til at finde ud af, i hvilken
+rækkefølge man skal RELAXe kanterne, så man garanteret finder de rigtige korteste
+afstande. Opskriften er:
++ Sæt $a.d = 0$ (start-knuden), og alle andre knuders $d = infinity$.
++ Gentag indtil alle knuder er behandlet:
+  - Find den knude der ikke er behandlet endnu, og som har den mindste $d$-værdi lige nu. Kald den $u$.
+  - Markér $u$ som "behandlet" (den rører vi ikke igen).
+  - Kør RELAX på alle kanter der går ud fra $u$ (altså $u$ → noget).
+
+Man tager altid den nærmeste ubehandlede knude og "skubber" information videre fra
+den til dens naboer.
+
+*Hvordan tæller man, hvor mange RELAX der ændrer noget?* Lav en tabel — det er den
+sikre metode der undgår fejl:
+
+#table(
+  columns: 4,
+  align: (left, left, left, left),
+  table.header([Knude vi behandler nu], [Kant vi relaxer], [Udregning], [Blev der ændret noget?]),
+  [(den med mindste $d$)], [(en udgående kant fra den)], [gammel $d$ + vægt], [sammenlign med målets $d$],
+)
+
+Gå knude for knude, i den rækkefølge de bliver "behandlet" (mindste $d$ først), og
+skriv hver enkelt udgående kant ned — selv de der virker "oplagte". Tæl til sidst,
+hvor mange rækker der fik et #sym.checkmark.
+
+*De typiske faldgruber:*
+- *Forveksl ikke $v.d$ med "knuden der hedder $d$" i grafen.* Hvis grafen har en knude kaldet $d$, og opgaven taler om $v.d$, betyder det stadig "distance-værdien for en hvilken som helst knude $v$" — ikke "knuden $d$ specifikt". Det er bare et tilfælde at bogstavet er det samme.
+- *Tjek pilenes retning meget omhyggeligt.* RELAX kan kun køres i den retning pilen peger. Hvis pilen går fra $e$ til $c$, kan man IKKE relaxe $c$ → $e$ — kun $e$ → $c$.
+- *"Lige god" tæller ikke som ændring.* Det skal være strengt mindre ($<$), ikke "mindre end eller lig med" ($<=$), for at tælle som en ændring.
+- *Skriv ALT ned i en tabel.* Det er nemt at "se" i hovedet at en kant ikke giver en ændring, og så glemme at tjekke den ordentligt — eller værre, glemme den helt. En systematisk tabel forhindrer den slags fejl.

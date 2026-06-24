@@ -423,3 +423,39 @@ uændrede i svarmulighederne — det er en hurtig måde at udelukke forkerte sva
 )
 
 Efter loopet: $"swap"(A[i+1], A[r])$ for at placere pivot korrekt.
+
+=== CountingSort: køretiden afhænger af både $n$ og $k$
+*Fælde:* Man tror nemt at CountingSort altid er $Theta(n)$. Det er den ikke.
+
+*Den rigtige formel:*
+$ Theta(n + k) $
+hvor:
+- $n$ = antal elementer der skal sorteres.
+- $k$ = størrelsen af værdiintervallet (antal mulige værdier).
+
+*Hvorfor:* Algoritmen opretter et "counting array" med ét felt per mulig værdi i
+intervallet. Det array skal initialiseres og gennemløbes, uanset hvor mange af
+felterne der reelt bliver brugt. Det er det skridt der kan dominere køretiden,
+hvis $k$ er stor.
+
+*Eksempel — værdier i $[0; n^c[$:*
+$ k = n^c $
+$ Theta(n + n^c) = Theta(n^c) quad "for" c > 1 $
+$ Theta(n) quad "for" c = 1 $
+
+#table(
+  columns: 3,
+  align: (center, center, center),
+  table.header([Værdiinterval], [$k$], [Køretid]),
+  $[0; n[$, $n$, $Theta(n)$,
+  $[0; n^3[$, $n^3$, $Theta(n^3)$,
+  $[0; n^9[$, $n^9$, $Theta(n^9)$,
+)
+
+*Konklusion:* CountingSort er kun hurtig (lineær) når $k$ er $O(n)$ (eller i hvert
+fald polynomielt lille ift. $n$). Hvis værdiintervallet vokser hurtigere end $n$,
+bliver CountingSort dårligere end fx MergeSort ($Theta(n log n)$) — selv om
+antallet af elementer der sorteres er uændret.
+
+*Tommelfingerregel:* Kig altid på BÅDE $n$ og $k$, før du konkluderer noget om
+CountingSorts køretid.

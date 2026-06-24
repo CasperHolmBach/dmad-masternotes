@@ -222,6 +222,38 @@ $ W(i, j) = max{0, w(i, j)} + max{W(i-1, j), W(i, j-1)} $
 - Multiplicer tabelstørrelse med tid pr. celle — det giver den endelige køretid.
 - Tjek dine svarmuligheder: er der en mulighed der svarer til "tabelstørrelse" alene (ofte forkert, hvis cellerne ikke er $O(1)$), og en der svarer til "tabelstørrelse $times$ ekstra faktor" (ofte rigtig, hvis der er en indre løkke)?
 
+=== Mindste pladsforbrug (mønster)
+*Kerneindsigt.* En DP-tabel kræver ikke altid plads svarende til sin fulde
+størrelse. Hvis rekursionsformlen kun refererer til celler i naboliggende
+rækker/søjler (typisk $i-1$ eller $j-1$, ikke vilkårligt langt tilbage), kan man
+bygge tabellen op trinvist og løbende kassere data, man ikke længere har brug for.
+
+```
+Mindste pladsforbrug ≠ tabelstørrelse
+Mindste pladsforbrug = størrelsen af det, man er nødt til at huske samtidig
+```
+
+*Sådan finder man det:*
++ *Se på hvilke celler rekursionsformlen refererer til.* For eksempel: $ W(i, j) = dots + max{W(i-1, j), W(i, j-1)} $ Her bruges kun $i-1$ (forrige række) og $j-1$ (forrige søjle) — ikke fx $i-2$ eller en sum over alle tidligere $k$. Det er afgørende: kun naboreferencer giver mulighed for at "rulle" tabellen.
++ *Vælg en udfyldningsretning* (række for række, eller søjle for søjle). Bygger man tabellen række for række, skal man kun gemme:
+  - den forrige række (længde $n+1$),
+  - den række man er ved at udfylde nu (længde $n+1$),
+  → plads $Theta(n)$. Bygger man i stedet søjle for søjle: → plads $Theta(m)$.
++ *Vælg den billigste retning.* Da retningen er et frit valg, vælger man den korteste dimension: $ "Mindste pladsforbrug" = Theta(min{m, n}) $
+
+*Faldgruber:*
+- *At forveksle med køretid:* Køretiden afhænger af antal celler ($Theta(m n)$ hvis hver celle tager konstant tid), men pladsforbruget afhænger kun af, hvor meget man skal holde i hukommelsen på samme tid. De to spørgsmål besvares forskelligt, selvom de bruger samme rekursionsformel.
+- *At tro man skal beholde hele tabellen,* fordi den er defineret for alle $(i, j)$: Det er kun nødvendigt, hvis man har brug for at slå op i gamle rækker/søjler senere (fx for at rekonstruere en løsning, ikke kun finde den optimale værdi).
+- *At vælge den forkerte retning:* Hvis $m$ og $n$ er meget forskellige i størrelse, betyder valget af retning meget — vælg altid den korteste.
+
+*Tjekliste til lignende opgaver:*
+- Identificer hvilke tidligere indeks ($i-1$, $j-1$, $i-2$, osv.) rekursionen bruger.
+- Bekræft at det kun er konstant mange naboreferencer (ikke vilkårligt langt tilbage).
+- Beslut hvilken retning (rækker eller søjler) man kan udfylde tabellen i.
+- Pladsforbrug for den retning = længden af den modsatte dimension.
+- Vælg den retning der minimerer pladsforbruget → $Theta(min{m, n})$, hvis begge retninger er mulige.
+- Spørg dig selv: skal jeg kun finde den optimale værdi, eller skal jeg også rekonstruere selve løsningen? Det sidste kræver ofte mere plads.
+
 
 == Eksamenstips og faldgruber
 _Noter tilføjes._
