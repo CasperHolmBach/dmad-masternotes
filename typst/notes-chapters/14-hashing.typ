@@ -73,3 +73,45 @@ auxiliary hash-funktion $h'(x)$ der kunne have ført til dette resultat.
 - Hver plads du møder, som er optaget, er en gyldig kandidat for $h'(x)$ (inklusive landingspladsen selv).
 - Så snart du møder en ledig plads (gående baglæns) → STOP. Denne plads er ikke gyldig.
   - Alle pladser endnu længere tilbage er automatisk udelukkede også, fordi probing fra dem ville være stoppet ved den ledige plads i stedet for at nå frem til landingspladsen.
+
+=== Double hashing: find mulige værdier af $h_2(x)$
+*Grundformel for probe-sekvensen.* Double hashing bruger IKKE faste skridt af 1
+(som linear probing). I stedet hopper den i skridt af størrelse $h_2(x)$.
+Probe-sekvensen (forsøg nummer $i = 0, 1, 2, dots$) er:
+$ "forsøg"(i) = (h_1(x) + i dot h_2(x)) mod m $
+hvor $m$ = tabelstørrelsen.
+
+*VIGTIGT:* Startpunktet er $h_1(x)$ — IKKE altid indeks 0! $h_1(x)$ kan være et
+hvilket som helst indeks fra $0$ til $m-1$. Det er kun "indeks 0" i et konkret
+eksempel, hvis opgaven specifikt oplyser at $h_1(x) = 0$ for den værdi.
+
+*Metode til at finde $h_2(x)$:*
++ Identificer $h_1(x)$ (oplyst i opgaven).
++ Identificer landingspladsen (hvor elementet faktisk endte i tabellen).
++ Simulér forsøgene ét ad gangen ud fra $h_1(x)$, og tjek hvilke pladser der var OPTAGET på det tidspunkt (før indsættelsen):
+  - $"forsøg"(0) = h_1(x)$ → var den optaget? Hvis ja, fortsæt til $"forsøg"(1)$.
+  - $"forsøg"(1) = (h_1(x) + h_2(x)) mod m$ → ramte denne landingspladsen?
+  - Hvis ja: antal hop $= 1$, og man kan opstille ligningen.
++ Opstil ligningen: $h_1(x) + ("antal hop") dot h_2(x) equiv "landingsplads" quad (mod m)$
++ Løs for $h_2(x) mod m$.
++ Begræns til det gyldige interval for $h_2(x)$, typisk $1 <= h_2(x) <= m-1$ (da $h_2(x) = 0$ ville betyde at tabellen aldrig prober videre).
+
+*Eksempel.* Tabel med størrelse $m = 7$ (indeks øverst):
+
+#table(
+  columns: 7,
+  align: center,
+  table.header([0], [1], [2], [3], [4], [5], [6]),
+  [12], [–], [10], [–], [22], [–], [31],
+)
+
+$h_1(97) = 0$ (oplyst). $97$ ender på indeks $1$.
+- $"forsøg"(0) = 0$ → optaget ($12$) → prøv næste.
+- $"forsøg"(1) = (0 + h_2(97)) mod 7$ → skal give $1$ (da det er der $97$ endte).
+
+Ligning: $h_2(97) mod 7 = 1$ → gyldigt svar i intervallet $[1, 6]$: $h_2(97) = 1$.
+
+*Generel pointe at huske:*
+- Start altid fra $h_1(x)$, aldrig automatisk fra indeks 0.
+- Tæl antal "fejlede" forsøg (optagne pladser man passerer) for at vide hvilket $i$ der svarer til landingspladsen.
+- Opstil kongruensligningen og løs modulo tabelstørrelsen $m$.

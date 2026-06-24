@@ -377,4 +377,58 @@ Algoritmen har en køretid på $O(n + m)$.
 
 
 == Eksamenstips og faldgruber
-_Noter tilføjes (konvention om alfabetisk ordnede nabolister)._
+
+=== Topologisk sortering: tjek en kandidatliste
+*Definition.* En topologisk sortering af en rettet acyklisk graf (DAG) er en
+rækkefølge af ALLE knuder, sådan at for HVER kant $u -> v$ i grafen, kommer $u$
+FØR $v$ i rækkefølgen. Der findes typisk FLERE gyldige topologiske sorteringer
+for samme graf — det er ikke nødvendigvis kun ét rigtigt svar.
+
+*VIGTIG MISFORSTÅELSE.* Det er IKKE et krav at nabopar i listen har en direkte
+kant mellem sig. Hvis listen er $x, y, z, dots$ er det IKKE et krav at $x -> y$ og
+$y -> z$ er kanter i grafen. Der kan godt stå andre knuder imellem to knuder der
+har en kant. Det eneste krav er: for HVER eksisterende kant $u -> v$ i grafen
+(uanset hvor langt fra hinanden $u$ og $v$ står i listen), skal $u$ stå ET STED
+FØR $v$.
+
+*Metoden til at TJEKKE en given kandidatliste (hurtigst):* I stedet for at
+konstruere en sortering fra bunden, er det hurtigere at verificere en given
+kandidatliste direkte:
++ List ALLE kanter i grafen ($u -> v$).
++ For hver kandidatliste: find positionen (indekset) af hver knude i listen.
++ For hver kant $u -> v$: tjek om $"pos"(u) < "pos"(v)$ i kandidatlisten.
+  - Hvis JA for alle kanter → listen ER en gyldig topologisk sortering.
+  - Hvis NEJ for bare ÉN kant (altså $v$ står før $u$, selvom kanten er $u -> v$) → listen er UGYLDIG, forkast den.
+
+*Eksempel.* Graf med kanter: $b -> a$, $b -> c$, $b -> d$, $b -> e$, $d -> a$, $d -> e$, $c -> e$, $f -> c$, $f -> e$.
+
+Tjek kandidatlisten: $f, b, d, c, a, e$.
+- $b -> a$: $"pos"(b) = 2$, $"pos"(a) = 5$ → $2 < 5$ #sym.checkmark
+- $b -> c$: $"pos"(b) = 2$, $"pos"(c) = 4$ → $2 < 4$ #sym.checkmark
+- $b -> d$: $"pos"(b) = 2$, $"pos"(d) = 3$ → $2 < 3$ #sym.checkmark
+- $b -> e$: $"pos"(b) = 2$, $"pos"(e) = 6$ → $2 < 6$ #sym.checkmark
+- $d -> a$: $"pos"(d) = 3$, $"pos"(a) = 5$ → $3 < 5$ #sym.checkmark
+- $d -> e$: $"pos"(d) = 3$, $"pos"(e) = 6$ → $3 < 6$ #sym.checkmark
+- $c -> e$: $"pos"(c) = 4$, $"pos"(e) = 6$ → $4 < 6$ #sym.checkmark
+- $f -> c$: $"pos"(f) = 1$, $"pos"(c) = 4$ → $1 < 4$ #sym.checkmark
+- $f -> e$: $"pos"(f) = 1$, $"pos"(e) = 6$ → $1 < 6$ #sym.checkmark
+
+Alle betingelser holder → GYLDIG topologisk sortering.
+
+Modeksempel: listen $d, b, c, a, f, e$ ville være UGYLDIG, fordi $b -> d$ kræver
+at $b$ står før $d$, men her står $d$ (pos 1) før $b$ (pos 2).
+
+*Praktiske genveje til at spotte ugyldige lister hurtigt:*
+- Knuder med 0 indgående kanter (rene "kilder", som $b$ i eksemplet) skal altid stå tidligt — de kan aldrig have nogen der peger på dem som skal stå før dem.
+- Knuder med 0 udgående kanter (rene "synke", som $e$ i eksemplet) skal altid stå sent — de peger ikke selv på nogen, men mange peger på dem.
+- Tjek disse "kilde"- og "synke"-knuder FØRST i en kandidatliste — det udelukker ofte forkerte svar hurtigt, før man skal tjekke alle kanter.
+
+*Konstruér selv en sortering (Kahns algoritme):*
++ Find en knude med 0 indgående kanter (fra de resterende knuder).
++ Tilføj den til rækkefølgen.
++ Fjern knuden og alle dens udgående kanter fra grafen.
++ Gentag indtil alle knuder er placeret.
+
+Hvis der på et tidspunkt ikke findes nogen knude med 0 indgående kanter, men der
+stadig er knuder tilbage, indeholder grafen en cyklus, og der findes IKKE en
+topologisk sortering.

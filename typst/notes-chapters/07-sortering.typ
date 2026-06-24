@@ -314,4 +314,65 @@ _Noter tilføjes (bedste/gennemsnitlige/værste tilfælde, in-place, stabil)._
 
 
 == Eksamenstips og faldgruber
-_Noter tilføjes._
+
+=== PARTITION (CLRS / Quicksort): tjek og simulér resultatet
+*Algoritmen (Lomuto partition scheme, CLRS-version):*
+
+```
+PARTITION(A, p, r):
+    x = A[r]           // pivot er ALTID det sidste element i subarrayet
+    i = p - 1
+    for j = p to r-1:
+        if A[j] <= x:
+            i = i + 1
+            swap(A[i], A[j])
+    swap(A[i+1], A[r])
+    return i+1          // pivots endelige indeks
+```
+
+*1. Pivot er IKKE midten af subarrayet.* Pivots endelige plads er IKKE det
+geometriske midtpunkt af subarrayet. Den bestemmes udelukkende af VÆRDIERNE:
+$ "Pivots endelige indeks" = p + k - 1 $
+hvor $k$ = antal elementer i subarrayet (inkl. pivot selv) der er $<=$ pivot.
+Eksempel: subarray fra indeks 4–13, pivot $= A[13]$. Tæl hvor mange elementer
+(inkl. pivot) er $<=$ pivot → det tal $k$ fortæller hvilken plads (talt fra $p$)
+pivot ender på.
+
+*2. Pivot-egenskaben er NØDVENDIG men ikke TILSTRÆKKELIG.* Et korrekt
+PARTITION-resultat skal opfylde:
+- Alt til venstre for pivots endelige plads er $<=$ pivot.
+- Alt til højre for pivots endelige plads er $>$ pivot.
+- Pivot selv står på sin endelige plads.
+
+MEN: Der findes ofte FLERE mulige arrangementer af elementerne, der alle opfylder
+denne egenskab. Kun ÉT af dem er det algoritmen faktisk producerer — fordi
+algoritmen bygger sin omrokering op via en bestemt, deterministisk sekvens af
+swaps.
+
+→ Pivot-egenskaben kan bruges til at UDELUKKE forkerte svarmuligheder, men kan
+IKKE bruges til at afgøre mellem flere svar der alle ser "gyldige" ud. For det
+skal man SIMULERE algoritmen trin for trin.
+
+*3. Elementer UDENFOR det relevante subarray ($p$ til $r$) ændres ikke.* Hvis
+opgaven f.eks. siger $"PARTITION"(A, 4, 13)$, men arrayet har 15 elementer, så
+rører algoritmen IKKE ved indeks 1–3 eller 14–15. Tjek altid at disse forbliver
+uændrede i svarmulighederne — det er en hurtig måde at udelukke forkerte svar
+(selvom det ikke nødvendigvis skiller alle svar fra hinanden).
+
+*Metode til at løse denne opgavetype:*
++ Identificer subarrayet ($p$ til $r$) og pivot ($= A[r]$).
++ Brug $k$-formlen til at beregne pivots forventede endelige indeks. Brug dette til hurtigt at udelukke svar hvor pivot står forkert.
++ Tjek pivot-egenskaben (venstre $<=$ pivot, højre $>$ pivot) for at udelukke flere svar.
++ Hvis flere svar stadig ser gyldige ud: SIMULÉR algoritmen trin for trin (lav en tabel med $j$, $A[j]$, sammenligning, evt. swap, og opdateret array) for at finde det NØJAGTIGE resultat.
++ Husk det sidste skridt: $"swap"(A[i+1], A[r])$ — pivot flyttes fra sin oprindelige plads ($r$) til sin endelige plads ($i+1$) til sidst.
+
+*Eksempel på simulationstabel:*
+
+#table(
+  columns: 6,
+  align: (center, center, center, left, center, left),
+  table.header([$j$], [$A[j]$], [$A[j] <= "pivot"?$], [Handling], [$i$ efter], [Array]),
+  […], […], […], [swap($A[i], A[j]$) eller intet], […], […],
+)
+
+Efter loopet: $"swap"(A[i+1], A[r])$ for at placere pivot korrekt.

@@ -98,4 +98,44 @@ Den samlede køretid for huffmans-algoritme er $O(n log n)$.
 
 
 == Eksamenstips og faldgruber
-_Noter tilføjes._
+
+=== Huffman-træ: byg det og find kodelængder
+*Grundprincippet.* Huffman-algoritmen bygger et binært træ bottom-up, ved
+gentagne gange at slå de to MINDSTE frekvenser sammen til en ny node, indtil kun
+ét træ (roden) er tilbage.
+
+*Algoritmen, trin for trin:*
++ Læg alle tegn i en pulje, sorteret efter hyppighed.
++ Gentag indtil kun ét element er tilbage i puljen:
+  - Tag de to elementer med LAVEST frekvens ud af puljen.
+  - Slå dem sammen til en ny node, hvis frekvens = summen af de to.
+  - Læg den nye (sammensatte) node TILBAGE i puljen.
++ Det sidste element der er tilbage er roden af træet.
+
+*VIGTIG POINTE — sammensatte noder går tilbage i puljen.* Når to elementer slås
+sammen til en ny node (f.eks. $c:100$ og $a:200$ bliver til $(c a):300$),
+behandles denne nye node som et HELT ALMINDELIGT element i puljen i alle
+efterfølgende runder.
+- Algoritmen er ligeglad med om en node er et originalt tegn eller en tidligere sammensætning — den kigger KUN på frekvensværdien.
+- Den sammensatte node konkurrerer på lige fod med resten af puljen om at blive valgt som "en af de to mindste" i næste runde.
+- Træets struktur (hvilke børn en node har) "huskes" undervejs, men det er kun frekvens-TALLET der bruges til at afgøre rækkefølgen af sammenlægninger.
+
+*Eksempel.* Tegn med hyppigheder: $c:100$, $a:200$, $b:250$, $d:350$, $e:400$.
+- Trin 1: Mindste to er $c(100)$ og $a(200)$ → ny node $(c a):300$. Pulje nu: $b:250$, $(c a):300$, $d:350$, $e:400$.
+- Trin 2: Mindste to er $b(250)$ og $(c a)(300)$ → ny node $(b, c a):550$. Pulje nu: $d:350$, $e:400$, $(b, c a):550$.
+- Trin 3: Mindste to er $d(350)$ og $e(400)$ → ny node $(d e):750$. Pulje nu: $(b, c a):550$, $(d e):750$.
+- Trin 4: Sidste to slås sammen til roden: $550 + 750 = 1300$.
+
+*Sådan finder man kodelængden for et tegn.* Kodelængden = antal niveauer (kanter)
+fra roden ned til tegnets blad i træet. Tæl simpelthen hvor mange "hop" der er fra
+roden til bladet. I eksemplet ovenfor:
+- $d$ og $e$ ligger 2 niveauer fra roden → 2 bits hver.
+- $b$ ligger 2 niveauer fra roden → 2 bits.
+- $c$ og $a$ ligger 3 niveauer fra roden (de er børn af $(c a)$, som er barn af $550$) → 3 bits hver.
+
+*Tjekliste til denne opgavetype:*
++ Sorter tegnene efter hyppighed.
++ Slå de to mindste sammen, læg resultatet tilbage i puljen.
++ Gentag — husk at sammensatte noder tæller på lige fod med originale tegn i de følgende runder.
++ Fortsæt til kun roden er tilbage.
++ Tæl niveauer fra rod til det ønskede tegns blad for at finde kodelængden (antal bits).
