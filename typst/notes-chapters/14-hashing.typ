@@ -61,4 +61,15 @@ I praksis kan man regne med at hashing understøtter Search, Insert, og Delete i
 
 
 == Eksamenstips og faldgruber
-_Noter tilføjes (rekonstruere indsættelsesrækkefølge / mulige hashværdier)._
+
+=== Genvej: Mulige værdier af $h'(x)$ ved linear probing
+*Opgavetype.* Givet en hashtabel der bruger linear probing, og et element der er
+blevet indsat og endt på et bestemt indeks — find ud af hvilke værdier af den
+auxiliary hash-funktion $h'(x)$ der kunne have ført til dette resultat.
+
+*Genvejen (ingen beregning nødvendig):*
+- Find indekset hvor elementet faktisk endte (landingspladsen).
+- Gå baglæns fra landingspladsen, med wrap-around hvis nødvendigt.
+- Hver plads du møder, som er optaget, er en gyldig kandidat for $h'(x)$ (inklusive landingspladsen selv).
+- Så snart du møder en ledig plads (gående baglæns) → STOP. Denne plads er ikke gyldig.
+  - Alle pladser endnu længere tilbage er automatisk udelukkede også, fordi probing fra dem ville være stoppet ved den ledige plads i stedet for at nå frem til landingspladsen.

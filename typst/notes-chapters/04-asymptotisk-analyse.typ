@@ -251,4 +251,60 @@ nestede loops de anvender:
 
 
 == Eksamenstips og faldgruber
-_Noter tilføjes._
+
+=== De fem notationer og hvad de betyder
+- *$O(g(n))$:* $f$ vokser HØJST så hurtigt som $g$ ($<=$)
+- *$Omega(g(n))$:* $f$ vokser MINDST så hurtigt som $g$ ($>=$)
+- *$Theta(g(n))$:* $f$ vokser LIGE så hurtigt som $g$ ($=$)
+- *$o(g(n))$:* $f$ vokser STRENGT langsommere end $g$ ($<$) — "lille o"
+- *$omega(g(n))$:* $f$ vokser STRENGT hurtigere end $g$ ($>$) — "lille omega"
+
+*Tommelfingerregel:* store bogstaver ($O$, $Omega$, $Theta$) tillader "lige
+hurtigt", små bogstaver ($o$, $omega$) kræver en STRENG ulighed (ikke lige
+hurtigt).
+
+=== Fejl 1: $(log n)^k$ forveksles med $n^k$
+*Fejlen:* At tro $(log n)^3$ vokser ligesom $n^3$, eller endda i nærheden af det.
+
+*Det rigtige:* $(log n)^3$ betyder $log n$ ganget med sig selv 3 gange — IKKE
+$log(n^3)$. Begge er stadig MEGET mindre end $n$.
+
+Eksempel med konkrete tal (log med grundtal 2):
+
+#table(
+  columns: 4,
+  align: (center, center, center, center),
+  table.header([$n$], [$log n$], [$(log n)^3$], [$n^3$]),
+  $8$, $3$, $27$, $512$,
+  $1024$, $10$, $1000$, $1.07 dot 10^9$,
+  $10^6$, $approx 20$, $approx 8000$, $10^18$,
+)
+
+*Generel regel at huske:* For enhver konstant $k$ og enhver $epsilon > 0$:
+$ (log n)^k = O(n^epsilon) $
+En logaritme i en hvilken som helst potens vokser STADIG langsommere end $n$
+opløftet i selv den mindste positive potens.
+
+=== Fejl 2: Konstanter og lille-o
+*Fejlen:* At tro at "$6$ er $o(7)$" er sandt, fordi $6 < 7$.
+
+*Det rigtige:* $o(g(n))$ kræver at grænseværdien
+$ lim_(n -> oo) f(n)/g(n) = 0 $
+Men $6 \/ 7$ er en KONSTANT, uafhængig af $n$. Grænsen er $6 \/ 7$, ikke $0$. Så
+"$6$ er $o(7)$" er FALSK — det er derimod $O(7)$ og $Theta(7)$, men ikke $o(7)$.
+Lille-o handler om forskel i VÆKSTRATE, ikke om hvilket tal er størst.
+
+=== Generel vækstrate-rækkefølge (langsomst til hurtigst)
+$ 1 << log n << (log n)^k << n^epsilon << n << n log n << n^2 << dots.c << 2^n << 3^n << n! << n^n $
+
+Brug denne skala til hurtigt at afgøre $O \/ Omega \/ Theta \/ o \/ omega$ mellem
+to udtryk:
+- $f$ til venstre for / samme sted som $g$ → $f$ er $O(g)$
+- $f$ strengt til venstre for $g$ → $f$ er $o(g)$
+- osv. (spejlvendt for $Omega$ og $omega$)
+
+=== Praktisk tjekliste til denne opgavetype
++ Identificer hvilken notation der bruges (stort/småt bogstav, hvilket symbol).
++ Placer begge funktioner på vækstrate-skalaen ovenfor.
++ Tjek om uligheden skal være streng ($o$, $omega$) eller kan være lige ($O$, $Omega$, $Theta$).
++ Pas på "snyde"-udtryk: $(log n)^k$, konstanter sat i forhold til konstanter, og udtryk der ligner hinanden visuelt men er meget forskellige (f.eks. $(log n)^3$ vs $log(n^3)$ vs $n^3$).
