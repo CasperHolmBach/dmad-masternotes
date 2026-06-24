@@ -132,7 +132,48 @@ A\* har samme worst case køretid som Dijkstra: $O((n + m) log n)$.
 
 
 == Hvilken algoritme skal bruges
-_Noter tilføjes (valg ud fra negative kanter / cykler / DAG)._
+Valget afhænger af tre ting: (1) skal du finde korteste veje fra ÉN startknude
+(single-source) eller mellem ALLE par af knuder (all-pairs)? (2) er der negative
+kantvægte? (3) hvilken struktur har grafen (uvægtet / DAG / generel)?
+
+=== Single-source (fra én startknude $s$)
+#table(
+  columns: 3,
+  align: (left, left, left),
+  table.header([Omstændighed], [Algoritme], [Køretid]),
+  [Uvægtet graf (alle kanter koster det samme)], [BFS (se grafgennemløb)], $O(n + m)$,
+  [DAG — også med negative vægte], [Relax i topologisk orden], $O(n + m)$,
+  [Alle kantvægte $>= 0$], [Dijkstra], $O((n + m) log n)$,
+  [Negative kanter (ingen negativ kreds)], [Bellman-Ford], $O(n m)$,
+  [Søger kun mod ét mål $t$, har en heuristik], [A\*], $O((n + m) log n)$,
+)
+
+Vælg den hurtigste der passer til omstændighederne: er grafen en DAG, slår
+topologisk relax altid Dijkstra; er alle vægte $>= 0$, er Dijkstra hurtigere end
+Bellman-Ford; kun hvis der KAN være negative kanter, er Bellman-Ford nødvendig.
+
+=== All-pairs (korteste vej mellem ALLE par af knuder)
+#table(
+  columns: 3,
+  align: (left, left, left),
+  table.header([Omstændighed], [Algoritme], [Køretid]),
+  [Alle kantvægte $>= 0$], [Dijkstra fra hver knude], $O(n (n + m) log n)$,
+  [Negative kanter, tæt graf ($m approx n^2$)], [Floyd-Warshall], $O(n^3)$,
+  [Negative kanter, tynd graf ($m << n^2$)], [Johnson], $O(n^2 log n + n m)$,
+  [Negative kanter, simpel kode], [Bellman-Ford fra hver knude], $O(n^2 m)$,
+)
+
+Tommelfingerregel for all-pairs med negative kanter: Floyd-Warshall ($O(n^3)$) er
+enklest og bedst på tætte grafer; Johnson er bedre på tynde grafer, fordi
+$O(n^2 log n + n m)$ slår $O(n^3)$ når $m$ er meget mindre end $n^2$.
+
+=== Negative kredse: korteste vej er udefineret
+Hvis der findes en negativ kreds, som kan nås på vejen mellem de relevante knuder,
+er korteste vej IKKE veldefineret ($delta = -infinity$, fordi man kan gå kredsen
+rundt i det uendelige). Kun *Bellman-Ford* (og Floyd-Warshall / Johnson, der bygger
+på samme idé) kan DETEKTERE en negativ kreds — Dijkstra og DAG-metoden antager
+stiltiende at problemet er veldefineret og giver forkerte svar ved negative
+kredse.
 
 
 == Eksamenstips og faldgruber
