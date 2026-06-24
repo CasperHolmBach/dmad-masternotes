@@ -20,11 +20,11 @@ gennemsnit under simpel uniform hashing.
   [Insertionsort], $O(n)$, $O(n^2)$, $O(n^2)$,
   [Selectionsort], $O(n^2)$, $O(n^2)$, $O(n^2)$,
   [Merge sort], $O(n log n)$, $O(n log n)$, $O(n log n)$,
-  [Quicksort], $O(n log n)$, $O(n log n)$, $O(n^2)$,
-  [Heapsort], $O(n log n)$, $O(n log n)$, $O(n log n)$,
-  [Counting sort], $O(n + k)$, $O(n + k)$, $O(n + k)$,
-  [Radix sort], $O(d(n + k))$, $O(d(n + k))$, $O(d(n + k))$,
-  [Bucket sort], $O(n + k)$, $O(n + k)$, $O(n^2)$,
+  [Quicksort#super[\*]], $O(n log n)$, $O(n log n)$, $O(n^2)$,
+  [Heapsort#super[\*]], $O(n log n)$, $O(n log n)$, $O(n log n)$,
+  [Counting sort#super[\*]], $O(n + k)$, $O(n + k)$, $O(n + k)$,
+  [Radix sort#super[\*]], $O(d(n + k))$, $O(d(n + k))$, $O(d(n + k))$,
+  [Bucket sort#super[\*]], $O(n + k)$, $O(n + k)$, $O(n^2)$,
 
   table.cell(colspan: 4, fill: luma(235))[*Heaps og prioritetskø*],
   [Build-Heap], $O(n)$, $O(n)$, $O(n)$,
@@ -34,7 +34,7 @@ gennemsnit under simpel uniform hashing.
   [Maximum/Minimum (peek)], $O(1)$, $O(1)$, $O(1)$,
 
   table.cell(colspan: 4, fill: luma(235))[*Søgetræer*],
-  [Binært søgetræ (søg/indsæt/slet/min/maks/succ.)], $O(log n)$, $O(log n)$, $O(n)$,
+  [Binært søgetræ (søg/indsæt/slet/min/maks/succ.)#super[\*]], $O(log n)$, $O(log n)$, $O(n)$,
   [Rød-sort træ (søg/indsæt/slet)], $O(log n)$, $O(log n)$, $O(log n)$,
   [Order-statistic (OS-Select / OS-Rank)], $O(log n)$, $O(log n)$, $O(log n)$,
   [Inorder-gennemløb], $O(n)$, $O(n)$, $O(n)$,
@@ -52,7 +52,7 @@ gennemsnit under simpel uniform hashing.
 
   table.cell(colspan: 4, fill: luma(235))[*Disjunkte mængder (Union-Find)*],
   [Make-Set], $O(1)$, $O(1)$, $O(1)$,
-  [Find / Union (rang + stikomprimering)], [$O(alpha(n))$ amort.], [$O(alpha(n))$ amort.], [$O(alpha(n))$ amort.],
+  [Find / Union (rang + stikomprimering)#super[\*]], [$O(alpha(n))$ amort.], [$O(alpha(n))$ amort.], [$O(alpha(n))$ amort.],
   [Find / Union (uden heuristikker)], $O(1)$, $O(n)$, $O(n)$,
 
   table.cell(colspan: 4, fill: luma(235))[*Grådige algoritmer*],
@@ -67,9 +67,9 @@ gennemsnit under simpel uniform hashing.
 
   table.cell(colspan: 4, fill: luma(235))[*Hashing*],
   [Direct addressing (søg/indsæt/slet)], $O(1)$, $O(1)$, $O(1)$,
-  [Kædning — søg/slet], $O(1)$, $O(1)$, $O(n)$,
+  [Kædning — søg/slet#super[\*]], $O(1)$, $O(1)$, $O(n)$,
   [Kædning — indsæt], $O(1)$, $O(1)$, $O(1)$,
-  [Åben adressering (søg/indsæt/slet)], $O(1)$, $O(1)$, $O(n)$,
+  [Åben adressering (søg/indsæt/slet)#super[\*]], $O(1)$, $O(1)$, $O(n)$,
 
   table.cell(colspan: 4, fill: luma(235))[*Korteste veje*],
   [Dijkstra (binær heap)], $O((n + m) log n)$, $O((n + m) log n)$, $O((n + m) log n)$,
@@ -79,6 +79,16 @@ gennemsnit under simpel uniform hashing.
   [Johnson (all-pairs)], $O(n^2 log n + n m)$, $O(n^2 log n + n m)$, $O(n^2 log n + n m)$,
   [A\* (som Dijkstra, afhænger af heuristik)], $O((n + m) log n)$, $O((n + m) log n)$, $O((n + m) log n)$,
 )
+
+*#super[\*] Særtilfælde og forbehold:*
+- *Quicksort:* Værste $O(n^2)$ rammes når pivot giver maksimalt skæve opdelinger — med sidste-element-pivot sker det netop på sorteret/næsten sorteret input. Tilfældigt pivotvalg gør forventet køretid $O(n log n)$.
+- *Heapsort:* Falder til $O(n)$ ved $n$ identiske elementer (sift-down bytter aldrig). Ellers $Theta(n log n)$ for vilkårlige inputs.
+- *Counting sort:* Kun lineær når $k = O(n)$. Generelt $Theta(n + k)$ — vokser til $Theta(n^c)$ hvis $k = n^c$ for $c > 1$.
+- *Radix sort:* Kun lineær når antal cifre $d$ er konstant og $k = O(n)$.
+- *Bucket sort:* Værste $O(n^2)$ hvis alle elementer havner i samme spand; $O(n)$ i gennemsnit ved jævnt fordelt input.
+- *Binært søgetræ:* $O(log n)$ forudsætter et nogenlunde balanceret træ. Et skævt træ (fx ved indsættelse i allerede sorteret orden) giver $O(n)$ — rød-sorte træer garanterer $O(log n)$.
+- *Find / Union:* $O(alpha(n))$ er amortiseret over en sekvens af operationer; et enkelt kald kan koste mere, men gennemsnittet er praktisk talt konstant.
+- *Hashing (kædning / åben adressering):* Gennemsnit $O(1)$ forudsætter en god hashfunktion og lav fyldningsgrad. Hasher alle nøgler til samme slot, bliver det $O(n)$.
 
 
 == Pladskompleksitet

@@ -224,9 +224,11 @@ Det kan også ses visuelt:
 
 Heapsort har en køretid på $O(n log n)$.
 
-*Bedste og værste tilfælde:* $O(n log n)$ i alle tilfælde. Build-Heap koster
-$O(n)$, og derefter udtages $n$ elementer, hver med et Max-Heapify-kald på
-$O(log n)$. Køretiden afhænger ikke af inputtets orden.
+*Bedste og værste tilfælde:* $O(n log n)$ for vilkårlige (forskellige) inputs,
+uafhængigt af inputtets orden. Build-Heap koster $O(n)$, og derefter udtages $n$
+elementer, hver med et Max-Heapify-kald på $O(log n)$. (Specialtilfælde: ved mange
+identiske elementer kan sift-down stoppe straks, så køretiden falder til $O(n)$ —
+se eksamenstippet sidst i kapitlet.)
 
 De tre $O(n log n)$ sorteringsalgoritmer:
 
@@ -459,3 +461,36 @@ antallet af elementer der sorteres er uændret.
 
 *Tommelfingerregel:* Kig altid på BÅDE $n$ og $k$, før du konkluderer noget om
 CountingSorts køretid.
+
+=== Heapsort på $n$ identiske elementer
+*Spørgsmål.* Hvad er worst-case køretiden for Heapsort på $n$ identiske
+elementer? *Svar:* $O(n)$ — ikke $O(n log n)$, som man normalt forventer for
+Heapsort.
+
+*Heapsort i to faser:*
++ *Build-heap:* opbygger en max-heap af de $n$ elementer — $O(n)$.
++ *Extract-max $n$ gange:* tager roden ud og kører sift-down/heapify for at genoprette heap-egenskaben — normalt $O(log n)$ per kald, altså $O(n log n)$ i alt.
+
+Den almindelige worst-case-analyse ($O(n log n)$) regner med at sift-down typisk
+skal vandre hele vejen ned igennem træet ($O(log n)$ niveauer).
+
+*Hvorfor identiske elementer ændrer dette.* Når alle elementer er identiske:
+- Sift-down sammenligner forælder med dens børn for at se om de skal bytte plads.
+- Standard-implementeringen bytter kun hvis et barn er *strengt større* end forælderen.
+- Da alle værdier er ens, er intet barn strengt større — der sker ingen swaps overhovedet.
+- Sift-down stopper derfor med det samme ($O(1)$) i stedet for at vandre $O(log n)$ niveauer ned.
+
+*Konsekvens for køretiden:*
+- Build-heap: stadig $O(n)$.
+- De $n$ extract-max-operationer: hver tager nu $O(1)$ i stedet for $O(log n)$.
+- Total: $n times O(1) = O(n)$.
+
+*Vigtig pointe.* Dette er ikke i modstrid med at Heapsorts worst-case generelt er
+$Theta(n log n)$ for *vilkårlige* inputs. Med identiske elementer rammer man et
+specifikt scenarie for sift-down (ingen byt sker), som giver en hurtigere kørsel
+end den generelle øvre grænse.
+
+*Læring.* Heapsorts $O(n log n)$-bound kommer fra antallet af niveauer et element
+skal sive igennem under sift-down. Det antal kan kollapse til $O(1)$, hvis
+sammenligningerne aldrig udløser et byt — hvilket sker når ingen børn er strengt
+større end deres forælder (fx ved identiske elementer).
